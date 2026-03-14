@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+:root {
+  --bg: #323232;
+  --surface: #3a3a3a;
+  --border: #4a4a4a;
+  --text: #e0e0e0;
+  --text-dim: #999;
+  --accent: #7c6cf0;
+}
+
+body {
+  margin: 0;
+  padding: 8px;
+  font-family: 'Adobe Clean', system-ui, sans-serif;
+  font-size: 11px;
+  color: var(--text);
+  background: var(--bg);
+}
+
+.section {
+  margin-bottom: 12px;
+}
+
+.section-title {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-dim);
+  margin-bottom: 6px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.row label {
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+sp-action-button, .btn {
+  width: 100%;
+  margin-bottom: 4px;
+}
+
+select {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 4px 6px;
+  border-radius: 3px;
+  font-size: 11px;
+  width: 120px;
+}
+
+input[type="range"] {
+  width: 100%;
+}
+
+.palette-entry {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 4px;
+}
+
+.palette-entry input[type="color"] {
+  width: 24px;
+  height: 24px;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 0;
+  cursor: pointer;
+}
+
+.palette-entry input[type="text"] {
+  width: 60px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-family: monospace;
+}
+
+.btn {
+  display: block;
+  width: 100%;
+  padding: 6px;
+  border: none;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-bottom: 4px;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+}
+
+.btn-secondary {
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+#status {
+  font-size: 10px;
+  color: var(--text-dim);
+  margin-top: 8px;
+  min-height: 14px;
+}
+</style>
+</head>
+<body>
+  <div class="section">
+    <div class="section-title">Source</div>
+    <button class="btn btn-secondary" id="useSelection">Use Selected Raster</button>
+    <div class="row" style="margin-top:6px">
+      <label>Gradient</label>
+      <select id="gradientType">
+        <option value="linear-h">Linear H</option>
+        <option value="linear-v">Linear V</option>
+        <option value="diagonal">Diagonal</option>
+        <option value="radial">Radial</option>
+        <option value="conic">Conic</option>
+        <option value="noise">Noise</option>
+      </select>
+    </div>
+    <button class="btn btn-secondary" id="generateBtn">Generate Gradient</button>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Pattern</div>
+    <div class="row">
+      <label>Type</label>
+      <select id="patternType">
+        <option value="bayer2">Bayer 2x2</option>
+        <option value="bayer4" selected>Bayer 4x4</option>
+        <option value="bayer8">Bayer 8x8</option>
+        <option value="halftone">Halftone</option>
+        <option value="lines">Lines</option>
+        <option value="crosses">Crosses</option>
+        <option value="dots">Dots</option>
+        <option value="grid">Grid</option>
+        <option value="scales">Scales</option>
+      </select>
+    </div>
+    <div class="row">
+      <label>Style</label>
+      <select id="ditherStyle">
+        <option value="threshold" selected>Threshold</option>
+        <option value="scaled">Scaled</option>
+      </select>
+    </div>
+    <div class="row">
+      <label>Shape</label>
+      <select id="shapeType">
+        <option value="circle">Circle</option>
+        <option value="square" selected>Square</option>
+        <option value="diamond">Diamond</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Parameters</div>
+    <div class="row">
+      <label>Cell Size</label>
+      <input type="range" id="cellSize" min="2" max="32" value="8" style="width:100px">
+      <span id="cellSizeVal">8</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Palette</div>
+    <div class="row">
+      <label>Colors</label>
+      <select id="colorCount">
+        <option value="2" selected>2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+      </select>
+    </div>
+    <div id="paletteEntries"></div>
+    <div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:4px">
+      <button class="btn btn-secondary" style="width:auto;padding:2px 6px;font-size:10px" data-preset="bw">B/W</button>
+      <button class="btn btn-secondary" style="width:auto;padding:2px 6px;font-size:10px" data-preset="gameboy">GameBoy</button>
+      <button class="btn btn-secondary" style="width:auto;padding:2px 6px;font-size:10px" data-preset="sepia">Sepia</button>
+    </div>
+  </div>
+
+  <div class="section">
+    <button class="btn btn-primary" id="applyBtn">Apply to Artboard</button>
+  </div>
+
+  <div id="status"></div>
+
+  <script src="main.js"></script>
+</body>
+</html>

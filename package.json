@@ -1,0 +1,17 @@
+{
+  "name": "dither",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Vector dither tool — web app + Illustrator plugin",
+  "scripts": {
+    "dev": "npm run build:web && npx serve dist/web",
+    "build:web": "mkdir -p dist/web && esbuild packages/web/app.js --bundle --outfile=dist/web/app.js --format=esm && cp packages/web/index.html packages/web/favicon.svg dist/web/",
+    "build:illustrator": "esbuild packages/illustrator/src/main.js --bundle --outfile=packages/illustrator/main.js --format=iife --external:illustrator --external:uxp",
+    "build:plugin": "npm run build:illustrator && cd packages/illustrator && zip -r ../../dist/dither-illustrator.ccx manifest.json index.html main.js icons/ -x 'src/*'",
+    "watch:illustrator": "esbuild packages/illustrator/src/main.js --bundle --outfile=packages/illustrator/main.js --format=iife --external:illustrator --external:uxp --watch",
+    "build": "npm run build:web && npm run build:plugin"
+  },
+  "devDependencies": {
+    "esbuild": "^0.24.0"
+  }
+}

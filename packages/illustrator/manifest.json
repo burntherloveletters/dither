@@ -1,0 +1,31 @@
+{
+  "id": "com.dither.illustrator",
+  "name": "Dither",
+  "version": "1.0.0",
+  "manifestVersion": 5,
+  "main": "main.js",
+  "host": [
+    {
+      "app": "AI",
+      "minVersion": "28.0"
+    }
+  ],
+  "entrypoints": [
+    {
+      "type": "panel",
+      "id": "ditherPanel",
+      "label": {
+        "default": "Dither"
+      },
+      "minimumSize": { "width": 280, "height": 400 },
+      "preferredDockedSize": { "width": 280, "height": 600 },
+      "preferredFloatingSize": { "width": 280, "height": 600 },
+      "icons": [
+        { "width": 24, "height": 24, "path": "icons/icon.png", "scale": [1, 2] }
+      ]
+    }
+  ],
+  "icons": [
+    { "width": 48, "height": 48, "path": "icons/icon.png", "scale": [1, 2] }
+  ]
+}
