@@ -4,6 +4,12 @@ Vector dither tool that converts images and gradients into scalable SVG patterns
 
 Available as a **[web app](https://dither.neato.fun)** and a **native Adobe Illustrator plugin**.
 
+<p>
+  <img src="examples/gameboy.png" width="270" alt="GameBoy palette dither">
+  <img src="examples/gradient.png" width="270" alt="Blue gradient dither">
+  <img src="examples/sepia.png" width="270" alt="Sepia radial dither">
+</p>
+
 ## Features
 
 - Load any image or generate gradients (linear, radial, conic, diagonal, noise)
