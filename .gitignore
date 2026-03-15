@@ -1,3 +1,4 @@
 node_modules/
 dist/
-packages/illustrator/main.js
+packages/illustrator/ui/main.js
+packages/illustrator/build/

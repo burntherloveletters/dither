@@ -5,9 +5,10 @@ function pseudoNoise(x, y) {
   return (n & 0x7fffffff) / 0x7fffffff;
 }
 
-export function generateGradientGrid(type, size, cellSize) {
+export function generateGradientGrid(type, size, cellSize, height, angle) {
   const cols = Math.ceil(size / cellSize);
-  const rows = Math.ceil(size / cellSize);
+  const rows = Math.ceil((height || size) / cellSize);
+  const angleRad = ((angle || 0) * Math.PI) / 180;
 
   const grid = new Array(rows);
   for (let gy = 0; gy < rows; gy++) {
@@ -18,23 +19,22 @@ export function generateGradientGrid(type, size, cellSize) {
 
       let lum;
       switch (type) {
-        case 'linear-h':
-          lum = nx;
+        case 'linear': {
+          // Project position onto the angle vector, then normalize to 0–1
+          const raw = nx * Math.cos(angleRad) + ny * Math.sin(angleRad);
+          // Normalize based on the max possible projection for this angle
+          const maxProj = Math.abs(Math.cos(angleRad)) + Math.abs(Math.sin(angleRad));
+          lum = maxProj > 0 ? raw / maxProj : 0;
           break;
-        case 'linear-v':
-          lum = ny;
-          break;
-        case 'diagonal':
-          lum = (nx + ny) / 2;
-          break;
+        }
         case 'radial': {
           const dx = nx - 0.5, dy = ny - 0.5;
           lum = Math.min(1, Math.sqrt(dx * dx + dy * dy) * 2);
           break;
         }
         case 'conic': {
-          const a = Math.atan2(ny - 0.5, nx - 0.5);
-          lum = (a + Math.PI) / (2 * Math.PI);
+          const a = Math.atan2(ny - 0.5, nx - 0.5) + angleRad;
+          lum = ((a + Math.PI) % (2 * Math.PI)) / (2 * Math.PI);
           break;
         }
         case 'noise':

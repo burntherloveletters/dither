@@ -74,16 +74,25 @@ function processImage() {
 // ============================================================
 // GRADIENT GENERATOR
 // ============================================================
+function getGradientDimensions() {
+  const w = parseInt($('gradientWidth').value);
+  const ratio = $('aspectRatio').value;
+  if (ratio === 'custom') return { w, h: parseInt($('gradientHeight').value) };
+  const [rw, rh] = ratio.split(':').map(Number);
+  return { w, h: Math.round(w * rh / rw) };
+}
+
 function doGenerateGradient() {
   const type = $('gradientType').value;
-  const size = parseInt($('gradientSize').value);
+  const { w, h } = getGradientDimensions();
   const cellSize = parseInt($('cellSize').value);
+  const angle = parseInt($('gradAngle').value);
 
-  const result = generateGradientGrid(type, size, cellSize);
+  const result = generateGradientGrid(type, w, cellSize, h, angle);
   luminanceGrid = result.grid;
   gridCols = result.cols;
   gridRows = result.rows;
-  sourceImage = { width: size, height: size };
+  sourceImage = { width: w, height: h };
   isGeneratedSource = true;
 
   showCanvas();
@@ -349,11 +358,22 @@ function init() {
     if (e.target.files[0]) loadImage(e.target.files[0]);
   });
 
-  // Generate gradient
+  // Gradient controls — auto-regenerate on any change
   $('generateBtn').addEventListener('click', doGenerateGradient);
-  $('gradientSize').addEventListener('input', () => {
-    $('gradientSizeVal').textContent = $('gradientSize').value;
-  });
+  for (const id of ['gradientType', 'aspectRatio', 'gradAngle', 'gradientWidth', 'gradientHeight']) {
+    $(id).addEventListener('input', () => {
+      // Update labels
+      $('gradientWidthVal').textContent = $('gradientWidth').value;
+      $('gradientHeightVal').textContent = $('gradientHeight').value;
+      $('gradAngleVal').textContent = $('gradAngle').value + '\u00B0';
+      // Toggle visibility
+      $('heightRow').classList.toggle('hidden', $('aspectRatio').value !== 'custom');
+      const gt = $('gradientType').value;
+      $('gradAngleRow').classList.toggle('hidden', gt === 'noise' || gt === 'radial');
+      // Auto-regenerate if we're in gradient mode
+      if (isGeneratedSource || !sourceImage) doGenerateGradient();
+    });
+  }
 
   // Drag and drop
   const area = $('canvasArea');
@@ -416,6 +436,9 @@ function init() {
   updateVisibility();
   updateSliderLabels();
   buildPaletteUI();
+
+  // Auto-generate a gradient on startup
+  doGenerateGradient();
 }
 
 init();

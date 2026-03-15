@@ -8,103 +8,88 @@
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-:root {
-  --sidebar-w: 280px;
-  --bg: #121214;
-  --surface: #1a1a1e;
-  --surface2: #222226;
-  --border: #2a2a2e;
-  --text: #e4e4e7;
-  --text-dim: #8b8b8e;
-  --accent: #7c6cf0;
-  --accent-hover: #6b5ce0;
-}
-
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-  background: var(--bg);
-  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', system-ui, sans-serif;
+  background: #000;
+  color: #ededed;
   height: 100vh;
   overflow: hidden;
   display: flex;
   font-size: 13px;
+  -webkit-font-smoothing: antialiased;
 }
 
 .sidebar {
-  width: var(--sidebar-w);
-  min-width: var(--sidebar-w);
-  background: var(--surface);
-  border-right: 1px solid var(--border);
+  width: 240px;
+  min-width: 240px;
+  background: #0a0a0a;
+  border-right: 1px solid #1a1a1a;
   overflow-y: auto;
+  padding: 16px;
   display: flex;
   flex-direction: column;
+  gap: 2px;
 }
 
-.sidebar-header {
-  padding: 16px;
-  border-bottom: 1px solid var(--border);
-  font-size: 15px;
-  font-weight: 600;
+.sidebar-title {
+  font-size: 18px;
+  font-weight: 700;
   letter-spacing: -0.3px;
+  margin-bottom: 16px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.sidebar-section {
-  padding: 12px 16px;
-  border-bottom: 1px solid var(--border);
+.sidebar-title img {
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
 }
 
-.sidebar-section h3 {
-  font-size: 10px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-  color: var(--text-dim);
+.section-header {
+  font-size: 11px;
+  font-weight: 500;
+  color: #666;
+  margin-top: 16px;
   margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #1a1a1a;
 }
 
-label.control {
+.section-header:first-of-type { margin-top: 0; }
+
+.control-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 6px;
 }
 
-label.control span {
+.control-label {
   font-size: 12px;
-  color: var(--text-dim);
+  color: #888;
 }
 
-select, input[type="number"] {
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  color: var(--text);
-  padding: 4px 8px;
-  border-radius: 4px;
+select {
+  -webkit-appearance: none;
+  appearance: none;
+  background: #0a0a0a url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23888'/%3E%3C/svg%3E") no-repeat right 8px center;
+  border: 1px solid #333;
+  color: #ededed;
+  padding: 5px 24px 5px 8px;
+  border-radius: 6px;
   font-size: 12px;
+  font-family: inherit;
   outline: none;
-}
-
-select { width: 130px; cursor: pointer; }
-select:focus, input:focus { border-color: var(--accent); }
-
-input[type="range"] {
-  -webkit-appearance: none;
-  width: 100%;
-  height: 4px;
-  background: var(--surface2);
-  border-radius: 2px;
-  outline: none;
-  margin: 4px 0;
-}
-
-input[type="range"]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: var(--accent);
   cursor: pointer;
+  width: 120px;
+  transition: border-color 0.15s;
 }
+
+select:hover { border-color: #555; }
+select:focus { border-color: #888; }
 
 .slider-row {
   display: flex;
@@ -113,60 +98,75 @@ input[type="range"]::-webkit-slider-thumb {
   margin-bottom: 6px;
 }
 
-.slider-row span:first-child {
-  font-size: 12px;
-  color: var(--text-dim);
-  min-width: 60px;
-}
-
+.slider-row .control-label { min-width: 55px; }
 .slider-row input[type="range"] { flex: 1; }
 
-.slider-row .slider-val {
-  font-size: 11px;
-  color: var(--text-dim);
+.slider-val {
+  font-size: 12px;
+  color: #666;
   min-width: 28px;
   text-align: right;
   font-variant-numeric: tabular-nums;
+}
+
+input[type="range"] {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 2px;
+  background: #333;
+  border-radius: 1px;
+  outline: none;
+  margin: 2px 0;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #fff;
+  cursor: pointer;
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.3);
 }
 
 .palette-entry {
   display: flex;
   align-items: center;
   gap: 6px;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
 }
 
 .palette-entry input[type="color"] {
   -webkit-appearance: none;
   width: 28px;
   height: 28px;
-  border: 1px solid var(--border);
-  border-radius: 4px;
+  border: 1px solid #333;
+  border-radius: 6px;
   padding: 0;
   cursor: pointer;
   background: none;
 }
 
 .palette-entry input[type="color"]::-webkit-color-swatch-wrapper { padding: 2px; }
-.palette-entry input[type="color"]::-webkit-color-swatch { border: none; border-radius: 2px; }
+.palette-entry input[type="color"]::-webkit-color-swatch { border: none; border-radius: 4px; }
 
 .palette-entry input[type="text"] {
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  color: var(--text);
+  background: #0a0a0a;
+  border: 1px solid #333;
+  color: #ededed;
   padding: 4px 6px;
-  border-radius: 4px;
+  border-radius: 6px;
   font-size: 11px;
-  font-family: monospace;
-  width: 68px;
+  font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+  width: 64px;
 }
 
 .palette-entry input[type="range"] { flex: 1; }
 
 .palette-entry .pct-val {
   font-size: 11px;
-  color: var(--text-dim);
-  min-width: 30px;
+  color: #666;
+  min-width: 28px;
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
@@ -179,48 +179,75 @@ input[type="range"]::-webkit-slider-thumb {
 }
 
 .preset-btn {
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  color: var(--text-dim);
-  padding: 3px 8px;
-  border-radius: 3px;
+  background: transparent;
+  border: 1px solid #333;
+  color: #888;
+  padding: 4px 8px;
+  border-radius: 6px;
   font-size: 11px;
+  font-family: inherit;
   cursor: pointer;
   transition: all 0.15s;
 }
 
 .preset-btn:hover {
-  border-color: var(--accent);
-  color: var(--text);
+  border-color: #555;
+  color: #ededed;
 }
 
 .btn {
   display: block;
   width: 100%;
-  padding: 8px;
+  padding: 8px 12px;
   border: none;
   border-radius: 6px;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 500;
+  font-family: inherit;
   cursor: pointer;
-  transition: background 0.15s;
-  margin-bottom: 6px;
+  transition: all 0.15s;
+  margin-bottom: 4px;
 }
 
 .btn-primary {
-  background: var(--accent);
-  color: #fff;
+  background: #fff;
+  color: #000;
 }
 
-.btn-primary:hover { background: var(--accent-hover); }
+.btn-primary:hover { background: #e0e0e0; }
 
 .btn-secondary {
-  background: var(--surface2);
-  color: var(--text);
-  border: 1px solid var(--border);
+  background: transparent;
+  color: #ededed;
+  border: 1px solid #333;
 }
 
-.btn-secondary:hover { background: #2a2a2e; }
+.btn-secondary:hover { border-color: #555; }
+
+.btn-row {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+  padding-top: 12px;
+  border-top: 1px solid #1a1a1a;
+}
+
+.btn-row .btn { flex: 1; margin-bottom: 0; }
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 8px 0;
+  font-size: 11px;
+  color: #444;
+}
+
+.divider-line {
+  flex: 1;
+  height: 1px;
+  background: #1a1a1a;
+}
 
 .canvas-area {
   flex: 1;
@@ -229,7 +256,8 @@ input[type="range"]::-webkit-slider-thumb {
   justify-content: center;
   position: relative;
   overflow: hidden;
-  background: #0e0e10;
+  background: #000;
+  padding: 24px;
 }
 
 .canvas-area canvas {
@@ -245,9 +273,10 @@ input[type="range"]::-webkit-slider-thumb {
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  gap: 12px;
-  color: var(--text-dim);
+  gap: 10px;
+  color: #444;
   pointer-events: none;
+  font-size: 12px;
 }
 
 .drop-zone.has-image { display: none; }
@@ -255,170 +284,167 @@ input[type="range"]::-webkit-slider-thumb {
 .drop-zone-icon {
   width: 48px;
   height: 48px;
-  border: 2px dashed var(--border);
+  border: 1px dashed #333;
   border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 24px;
+  font-size: 20px;
+  color: #444;
 }
 
 .drag-over {
-  background: rgba(124, 108, 240, 0.05);
-  outline: 2px dashed var(--accent);
-  outline-offset: -8px;
+  background: rgba(255, 255, 255, 0.02);
+  outline: 1px dashed #555;
+  outline-offset: -12px;
 }
 
 .hidden { display: none !important; }
 
-.sidebar::-webkit-scrollbar { width: 6px; }
+.sidebar::-webkit-scrollbar { width: 4px; }
 .sidebar::-webkit-scrollbar-track { background: transparent; }
-.sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-
-.divider {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin: 8px 0 6px;
-  color: var(--text-dim);
-  font-size: 11px;
-}
-
-.divider-line {
-  flex: 1;
-  height: 1px;
-  background: var(--border);
-}
+.sidebar::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
 </style>
 </head>
 <body>
 
 <aside class="sidebar">
-  <div class="sidebar-header">Dither</div>
+  <div class="sidebar-title"><img src="favicon.svg" alt="">Dither</div>
 
-  <div class="sidebar-section">
-    <h3>Source</h3>
-    <input type="file" id="fileInput" accept="image/*" style="display:none">
-    <button class="btn btn-secondary" id="loadBtn">Load Image</button>
-    <div class="divider">
-      <div class="divider-line"></div>
-      <span>or generate</span>
-      <div class="divider-line"></div>
-    </div>
-    <label class="control">
-      <span>Gradient</span>
-      <select id="gradientType">
-        <option value="linear-h">Linear H</option>
-        <option value="linear-v">Linear V</option>
-        <option value="diagonal">Diagonal</option>
-        <option value="radial">Radial</option>
-        <option value="conic">Conic</option>
-        <option value="noise">Noise</option>
-      </select>
-    </label>
-    <div class="slider-row">
-      <span>Size</span>
-      <input type="range" id="gradientSize" min="128" max="1024" step="64" value="512">
-      <span class="slider-val" id="gradientSizeVal">512</span>
-    </div>
-    <button class="btn btn-secondary" id="generateBtn">Generate Gradient</button>
+  <div class="section-header">Source</div>
+  <input type="file" id="fileInput" accept="image/*" style="display:none">
+  <button class="btn btn-secondary" id="loadBtn">Load Image</button>
+  <div class="divider">
+    <div class="divider-line"></div>
+    <span>or generate</span>
+    <div class="divider-line"></div>
+  </div>
+  <div class="control-row">
+    <span class="control-label">Gradient</span>
+    <select id="gradientType">
+      <option value="linear" selected>Linear</option>
+      <option value="radial">Radial</option>
+      <option value="conic">Conic</option>
+      <option value="noise">Noise</option>
+    </select>
+  </div>
+  <div class="slider-row" id="gradAngleRow">
+    <span class="control-label">Angle</span>
+    <input type="range" id="gradAngle" min="0" max="360" value="0">
+    <span class="slider-val" id="gradAngleVal">0°</span>
+  </div>
+  <div class="control-row">
+    <span class="control-label">Size</span>
+    <select id="aspectRatio">
+      <option value="1:1">1:1 Square</option>
+      <option value="4:3">4:3</option>
+      <option value="3:2">3:2</option>
+      <option value="16:9" selected>16:9</option>
+      <option value="2:1">2:1</option>
+      <option value="9:16">9:16 Vertical</option>
+      <option value="custom">Custom</option>
+    </select>
+  </div>
+  <div class="slider-row">
+    <span class="control-label">Width</span>
+    <input type="range" id="gradientWidth" min="128" max="2048" step="64" value="1024">
+    <span class="slider-val" id="gradientWidthVal">1024</span>
+  </div>
+  <div class="slider-row hidden" id="heightRow">
+    <span class="control-label">Height</span>
+    <input type="range" id="gradientHeight" min="128" max="2048" step="64" value="512">
+    <span class="slider-val" id="gradientHeightVal">512</span>
+  </div>
+  <button class="btn btn-secondary hidden" id="generateBtn">Generate</button>
+
+  <div class="section-header">Pattern</div>
+  <div class="control-row">
+    <span class="control-label">Type</span>
+    <select id="patternType">
+      <option value="bayer2">Bayer 2x2</option>
+      <option value="bayer4" selected>Bayer 4x4</option>
+      <option value="bayer8">Bayer 8x8</option>
+      <option value="halftone">Halftone</option>
+      <option value="lines">Lines</option>
+      <option value="crosses">Crosses</option>
+      <option value="dots">Dots</option>
+      <option value="grid">Grid</option>
+      <option value="scales">Scales</option>
+    </select>
+  </div>
+  <div class="control-row">
+    <span class="control-label">Mode</span>
+    <select id="ditherMode">
+      <option value="image" selected>Image</option>
+      <option value="linear">Linear</option>
+      <option value="radial">Radial</option>
+    </select>
+  </div>
+  <div class="control-row">
+    <span class="control-label">Style</span>
+    <select id="ditherStyle">
+      <option value="threshold" selected>Threshold</option>
+      <option value="scaled">Scaled</option>
+    </select>
+  </div>
+  <div class="control-row">
+    <span class="control-label">Shape</span>
+    <select id="shapeType">
+      <option value="circle">Circle</option>
+      <option value="square" selected>Square</option>
+      <option value="diamond">Diamond</option>
+    </select>
   </div>
 
-  <div class="sidebar-section">
-    <h3>Pattern</h3>
-    <label class="control">
-      <span>Type</span>
-      <select id="patternType">
-        <option value="bayer2">Bayer 2x2</option>
-        <option value="bayer4" selected>Bayer 4x4</option>
-        <option value="bayer8">Bayer 8x8</option>
-        <option value="halftone">Halftone</option>
-        <option value="lines">Lines</option>
-        <option value="crosses">Crosses</option>
-        <option value="dots">Dots</option>
-        <option value="grid">Grid</option>
-        <option value="scales">Scales</option>
-      </select>
-    </label>
-    <label class="control">
-      <span>Mode</span>
-      <select id="ditherMode">
-        <option value="image" selected>Image</option>
-        <option value="linear">Linear</option>
-        <option value="radial">Radial</option>
-      </select>
-    </label>
-    <label class="control">
-      <span>Style</span>
-      <select id="ditherStyle">
-        <option value="threshold" selected>Threshold</option>
-        <option value="scaled">Scaled</option>
-      </select>
-    </label>
-    <label class="control">
-      <span>Shape</span>
-      <select id="shapeType">
-        <option value="circle">Circle</option>
-        <option value="square" selected>Square</option>
-        <option value="diamond">Diamond</option>
-      </select>
-    </label>
+  <div class="section-header">Parameters</div>
+  <div class="slider-row">
+    <span class="control-label">Cell Size</span>
+    <input type="range" id="cellSize" min="2" max="32" value="8">
+    <span class="slider-val" id="cellSizeVal">8</span>
+  </div>
+  <div class="slider-row" id="angleRow">
+    <span class="control-label">Angle</span>
+    <input type="range" id="angle" min="0" max="360" value="45">
+    <span class="slider-val" id="angleVal">45°</span>
+  </div>
+  <div class="slider-row" id="scaleRow">
+    <span class="control-label">Scale</span>
+    <input type="range" id="scale" min="25" max="200" value="100">
+    <span class="slider-val" id="scaleVal">1.0</span>
+  </div>
+  <div class="slider-row" id="offsetXRow">
+    <span class="control-label">Offset X</span>
+    <input type="range" id="offsetX" min="-100" max="100" value="0">
+    <span class="slider-val" id="offsetXVal">0</span>
+  </div>
+  <div class="slider-row" id="offsetYRow">
+    <span class="control-label">Offset Y</span>
+    <input type="range" id="offsetY" min="-100" max="100" value="0">
+    <span class="slider-val" id="offsetYVal">0</span>
   </div>
 
-  <div class="sidebar-section">
-    <h3>Parameters</h3>
-    <div class="slider-row">
-      <span>Cell Size</span>
-      <input type="range" id="cellSize" min="2" max="32" value="8">
-      <span class="slider-val" id="cellSizeVal">8</span>
-    </div>
-    <div class="slider-row" id="angleRow">
-      <span>Angle</span>
-      <input type="range" id="angle" min="0" max="360" value="45">
-      <span class="slider-val" id="angleVal">45°</span>
-    </div>
-    <div class="slider-row" id="scaleRow">
-      <span>Scale</span>
-      <input type="range" id="scale" min="25" max="200" value="100">
-      <span class="slider-val" id="scaleVal">1.0</span>
-    </div>
-    <div class="slider-row" id="offsetXRow">
-      <span>Offset X</span>
-      <input type="range" id="offsetX" min="-100" max="100" value="0">
-      <span class="slider-val" id="offsetXVal">0</span>
-    </div>
-    <div class="slider-row" id="offsetYRow">
-      <span>Offset Y</span>
-      <input type="range" id="offsetY" min="-100" max="100" value="0">
-      <span class="slider-val" id="offsetYVal">0</span>
-    </div>
+  <div class="section-header">Palette</div>
+  <div class="control-row">
+    <span class="control-label">Colors</span>
+    <select id="colorCount">
+      <option value="2" selected>2</option>
+      <option value="3">3</option>
+      <option value="4">4</option>
+      <option value="5">5</option>
+      <option value="6">6</option>
+      <option value="7">7</option>
+      <option value="8">8</option>
+    </select>
+  </div>
+  <div id="paletteEntries"></div>
+  <div class="preset-row">
+    <button class="preset-btn" data-preset="bw">B/W</button>
+    <button class="preset-btn" data-preset="gameboy">GameBoy</button>
+    <button class="preset-btn" data-preset="cga">CGA</button>
+    <button class="preset-btn" data-preset="sepia">Sepia</button>
   </div>
 
-  <div class="sidebar-section">
-    <h3>Palette</h3>
-    <label class="control">
-      <span>Colors</span>
-      <select id="colorCount">
-        <option value="2" selected>2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-        <option value="6">6</option>
-        <option value="7">7</option>
-        <option value="8">8</option>
-      </select>
-    </label>
-    <div id="paletteEntries"></div>
-    <div class="preset-row">
-      <button class="preset-btn" data-preset="bw">B/W</button>
-      <button class="preset-btn" data-preset="gameboy">GameBoy</button>
-      <button class="preset-btn" data-preset="cga">CGA</button>
-      <button class="preset-btn" data-preset="sepia">Sepia</button>
-    </div>
-  </div>
-
-  <div class="sidebar-section">
-    <h3>Export</h3>
+  <div class="btn-row">
     <button class="btn btn-primary" id="exportSvg">Export SVG</button>
     <button class="btn btn-secondary" id="exportPng">Export PNG</button>
   </div>

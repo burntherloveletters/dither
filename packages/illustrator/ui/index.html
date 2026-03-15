@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dither</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+  background: #000;
+  color: #ededed;
+  font-size: 12px;
+  padding: 14px;
+  -webkit-font-smoothing: antialiased;
+}
+
+.panel-title {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #1a1a1a;
+}
+.panel-title img { width: 20px; height: 20px; border-radius: 4px; }
+
+.section {
+  margin-bottom: 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #1a1a1a;
+}
+
+.section-title {
+  font-size: 10px;
+  font-weight: 500;
+  color: #666;
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #1a1a1a;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+.row label { color: #888; font-size: 11px; }
+
+select {
+  -webkit-appearance: none;
+  appearance: none;
+  background: #0a0a0a url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23888'/%3E%3C/svg%3E") no-repeat right 8px center;
+  border: 1px solid #333;
+  color: #ededed;
+  padding: 5px 24px 5px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-family: inherit;
+  width: 120px;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+select:hover { border-color: #555; }
+select:focus { border-color: #888; }
+
+.slider-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.slider-row label { color: #888; min-width: 55px; font-size: 11px; }
+.slider-row input[type="range"] { flex: 1; }
+.slider-row .val {
+  font-size: 11px;
+  color: #666;
+  min-width: 24px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+input[type="range"] {
+  -webkit-appearance: none;
+  height: 2px;
+  background: #333;
+  border-radius: 1px;
+  outline: none;
+  margin: 2px 0;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #fff;
+  cursor: pointer;
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.3);
+}
+
+.palette-entry {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+.palette-entry input[type="color"] {
+  -webkit-appearance: none;
+  width: 28px;
+  height: 28px;
+  border: 1px solid #333;
+  border-radius: 6px;
+  padding: 0;
+  cursor: pointer;
+  background: none;
+}
+.palette-entry input[type="color"]::-webkit-color-swatch-wrapper { padding: 2px; }
+.palette-entry input[type="color"]::-webkit-color-swatch { border: none; border-radius: 4px; }
+.palette-entry input[type="text"] {
+  width: 64px;
+  background: #0a0a0a;
+  border: 1px solid #333;
+  color: #ededed;
+  padding: 4px 6px;
+  border-radius: 6px;
+  font-size: 10px;
+  font-family: inherit;
+}
+
+.preset-row { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 6px; }
+.preset-btn {
+  background: transparent;
+  border: 1px solid #333;
+  color: #888;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 10px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.preset-btn:hover { border-color: #555; color: #ededed; }
+
+.btn {
+  display: block;
+  width: 100%;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.15s;
+  margin-bottom: 4px;
+}
+.btn-primary { background: #fff; color: #000; }
+.btn-primary:hover { background: #e0e0e0; }
+.btn-primary:disabled { opacity: 0.3; cursor: not-allowed; }
+.btn-secondary {
+  background: transparent;
+  color: #ededed;
+  border: 1px solid #333;
+}
+.btn-secondary:hover { border-color: #555; }
+
+#status {
+  font-size: 10px;
+  color: #666;
+  margin-top: 8px;
+  min-height: 14px;
+}
+
+.hidden { display: none !important; }
+</style>
+</head>
+<body>
+  <div class="panel-title"><img src="favicon.svg" alt="">Dither</div>
+
+  <div class="section">
+    <div class="section-title">Source</div>
+    <div class="row">
+      <label>Gradient</label>
+      <select id="gradientType">
+        <option value="linear" selected>Linear</option>
+        <option value="radial">Radial</option>
+        <option value="conic">Conic</option>
+        <option value="noise">Noise</option>
+      </select>
+    </div>
+    <div class="slider-row" id="gradAngleRow">
+      <label>Angle</label>
+      <input type="range" id="gradAngle" min="0" max="360" value="0">
+      <span class="val" id="gradAngleVal">0°</span>
+    </div>
+    <div class="row">
+      <label>Size</label>
+      <select id="aspectRatio">
+        <option value="1:1">1:1</option>
+        <option value="4:3">4:3</option>
+        <option value="3:2">3:2</option>
+        <option value="16:9" selected>16:9</option>
+        <option value="2:1">2:1</option>
+        <option value="9:16">9:16</option>
+        <option value="custom">Custom</option>
+      </select>
+    </div>
+    <div class="slider-row">
+      <label>Width</label>
+      <input type="range" id="gradientWidth" min="128" max="2048" step="64" value="1024">
+      <span class="val" id="gradientWidthVal">1024</span>
+    </div>
+    <div class="slider-row hidden" id="heightRow">
+      <label>Height</label>
+      <input type="range" id="gradientHeight" min="128" max="2048" step="64" value="512">
+      <span class="val" id="gradientHeightVal">512</span>
+    </div>
+    <button class="btn btn-secondary hidden" id="generateBtn">Generate Gradient</button>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Pattern</div>
+    <div class="row"><label>Type</label>
+      <select id="patternType">
+        <option value="bayer2">Bayer 2x2</option>
+        <option value="bayer4" selected>Bayer 4x4</option>
+        <option value="bayer8">Bayer 8x8</option>
+        <option value="halftone">Halftone</option>
+        <option value="lines">Lines</option>
+        <option value="crosses">Crosses</option>
+        <option value="dots">Dots</option>
+        <option value="grid">Grid</option>
+        <option value="scales">Scales</option>
+      </select>
+    </div>
+    <div class="row"><label>Style</label>
+      <select id="ditherStyle">
+        <option value="threshold" selected>Threshold</option>
+        <option value="scaled">Scaled</option>
+      </select>
+    </div>
+    <div class="row"><label>Shape</label>
+      <select id="shapeType">
+        <option value="circle">Circle</option>
+        <option value="square" selected>Square</option>
+        <option value="diamond">Diamond</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Parameters</div>
+    <div class="slider-row">
+      <label>Cell Size</label>
+      <input type="range" id="cellSize" min="2" max="32" value="8">
+      <span class="val" id="cellSizeVal">8</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Palette</div>
+    <div class="row"><label>Colors</label>
+      <select id="colorCount">
+        <option value="2" selected>2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+      </select>
+    </div>
+    <div id="paletteEntries"></div>
+    <div class="preset-row">
+      <button class="preset-btn" data-preset="bw">B/W</button>
+      <button class="preset-btn" data-preset="gameboy">GameBoy</button>
+      <button class="preset-btn" data-preset="cga">CGA</button>
+      <button class="preset-btn" data-preset="sepia">Sepia</button>
+    </div>
+  </div>
+
+  <div>
+    <button class="btn btn-primary" id="applyBtn" disabled>Generate Dither</button>
+  </div>
+  <div id="status">Connecting...</div>
+
+  <script src="main.js"></script>
+</body>
+</html>
